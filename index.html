@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ⅵ-2-2 생활 속 기체의 온도와 부피 관계</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Jua&family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F6F9FF;
+  --ink:#27324A;
+  --muted:#66728C;
+  --line:#DCE4F2;
+  --gas:#FF8A3D;        /* 기체: 주황 */
+  --gas-soft:#FFEBDD;
+  --sky:#5AB4E8;        /* 기체 입자: 하늘 */
+  --sky-soft:#E2F2FC;
+  --mint:#3FBFA6;
+  --mint-soft:#DDF5EF;
+  --sun:#FFD84D;
+  --sun-soft:#FFF6D2;
+  --answer:#16A34A;
+  --card:#FFFFFF;
+  --r:18px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:'Noto Sans KR',system-ui,sans-serif;font-size:19px;line-height:1.75;word-break:keep-all}
+img{max-width:100%;display:block}
+h1,h2,h3,.jua{font-family:'Jua','Noto Sans KR',sans-serif;font-weight:400;letter-spacing:-.01em}
+
+/* ===== 상단 내비 ===== */
+nav{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding-top:env(safe-area-inset-top,0px)}
+nav .in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:6px;padding:10px 18px;overflow-x:auto}
+nav .brand{font-family:'Jua';font-size:20px;color:var(--gas);white-space:nowrap;margin-right:10px}
+nav a{white-space:nowrap;text-decoration:none;color:var(--ink);font-size:16px;padding:6px 14px;border-radius:999px;font-weight:500}
+nav a:hover,nav a.on{background:var(--gas-soft);color:#C85A12}
+
+/* ===== 히어로 ===== */
+.hero{position:relative;overflow:hidden;background:linear-gradient(160deg,#FFF1E6 0%,#FFE2CC 55%,#FFD3B3 100%);padding:64px 20px 70px}
+.hero .in{max-width:1180px;margin:0 auto;position:relative;z-index:2;display:grid;grid-template-columns:1.2fr .8fr;gap:30px;align-items:center}
+.hero .unit{display:inline-block;background:#fff;color:#C85A12;font-family:'Jua';font-size:20px;padding:4px 16px;border-radius:999px}
+.hero h1{font-size:clamp(40px,6vw,68px);line-height:1.15;margin:14px 0 10px;color:#3A2A1E}
+.hero p{margin:0;font-size:20px;color:#6B4A33}
+.hero .pages{margin-top:18px;display:flex;gap:10px;flex-wrap:wrap}
+.hero .pages span{background:rgba(255,255,255,.75);border-radius:12px;padding:6px 14px;font-size:17px}
+#heroBox{width:100%;aspect-ratio:1/1;max-width:340px;justify-self:center;border-radius:50%;background:radial-gradient(circle at 35% 30%,#fff 0%,#FFF7EF 60%,#FFE6D2 100%);box-shadow:inset 0 0 0 6px #fff, 0 12px 30px rgba(200,90,18,.18)}
+
+/* ===== 레이아웃 ===== */
+main{max-width:1180px;margin:0 auto;padding:10px 20px 80px}
+section{padding:46px 0 10px}
+.sec-head{display:flex;align-items:center;gap:14px;margin-bottom:20px}
+.sec-head .num{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;font-family:'Jua';font-size:28px;color:#fff;background:var(--gas);flex:none}
+.sec-head h2{font-size:34px;margin:0;line-height:1.2}
+.sec-head small{display:block;font-family:'Noto Sans KR';font-size:15px;color:var(--muted);font-weight:500}
+
+.card{background:var(--card);border-radius:var(--r);padding:26px 28px;margin:18px 0;border:2px solid var(--line)}
+.card h3{font-size:25px;margin:0 0 12px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.tag{font-family:'Jua';font-size:16px;padding:3px 12px;border-radius:999px;background:var(--sky-soft);color:#1F6FA0}
+.tag.gas{background:var(--gas-soft);color:#C85A12}
+.tag.mint{background:var(--mint-soft);color:#1E8571}
+.tag.sun{background:var(--sun-soft);color:#9A7400}
+.card.concept{border-color:#FFC9A3;background:linear-gradient(#fff,#fff) padding-box}
+.card.concept h3::before{content:"";width:10px;height:26px;border-radius:4px;background:var(--gas)}
+.card.think{background:#FBFDFF;border-color:#BFE0F5}
+.card.lab{border-color:#A9E3D6}
+.card.check{background:#FFFCEF;border-color:#F3DF8C}
+
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center}
+.grid2.wide-left{grid-template-columns:1.3fr .7fr}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.fig{background:#fff;border-radius:14px;padding:8px}
+.fig figcaption{font-size:15px;color:var(--muted);text-align:center;margin-top:4px}
+.photo{border-radius:14px;overflow:hidden}
+.bubble{background:var(--sky-soft);border-radius:18px;padding:14px 20px;font-weight:700;font-size:21px;position:relative}
+.big-q{font-family:'Jua';font-size:28px;line-height:1.45;color:#1F4E79;margin:4px 0 14px}
+.def{font-size:22px;font-weight:700;background:var(--gas-soft);border-radius:14px;padding:14px 20px;margin:12px 0}
+ol.steps{padding-left:0;list-style:none;counter-reset:s;margin:0}
+ol.steps li{counter-increment:s;position:relative;padding:6px 0 6px 46px}
+ol.steps li::before{content:counter(s);position:absolute;left:0;top:7px;width:32px;height:32px;border-radius:50%;background:var(--mint);color:#fff;font-family:'Jua';font-size:19px;display:grid;place-items:center;line-height:1}
+.qlist{margin:0;padding:0;list-style:none}
+.qlist>li{padding:14px 0;border-top:1px dashed var(--line)}
+.qlist>li:first-child{border-top:none}
+.qn{display:inline-grid;place-items:center;width:30px;height:30px;border-radius:50%;background:var(--ink);color:#fff;font-family:'Jua';font-size:17px;margin-right:8px;line-height:1}
+.note{font-size:16px;color:var(--muted)}
+.side{background:#F3F6FC;border-radius:14px;padding:12px 16px;font-size:16px;line-height:1.6}
+.side b{color:#C85A12}
+
+/* ===== 빈칸 / 정답 ===== */
+.bl{display:inline-block;min-width:4.2em;padding:0 .35em;margin:0 .15em;border-radius:8px;text-align:center;cursor:pointer;
+    color:transparent;background:var(--sun-soft);border-bottom:3px solid #E9C43A;line-height:1.45;transition:color .25s,background .25s}
+.bl.on{color:var(--answer);font-weight:900;background:#E9F8EE;border-bottom-color:var(--answer)}
+.ans{position:relative;margin-top:10px;border-radius:12px;padding:12px 16px;cursor:pointer;min-height:54px;background:#F4F6FA;border:2px dashed #C9D3E4}
+.ans>*{visibility:hidden}
+.ans::before{content:"?";position:absolute;inset:0;display:grid;place-items:center;font-family:'Jua';font-size:26px;color:#9AA7BF}
+.ans.on{background:#EDFAF1;border:2px solid #BFE8CC;color:var(--answer);font-weight:700}
+.ans.on>*{visibility:visible}
+.ans.on::before{content:none}
+.ans p{margin:0}
+.rv-bar{display:flex;gap:10px;justify-content:flex-end;margin-top:16px;flex-wrap:wrap}
+.btn{font-family:'Jua';font-size:20px;border:none;border-radius:14px;padding:10px 22px;cursor:pointer;background:var(--answer);color:#fff;box-shadow:0 3px 0 #0E7A35;transition:transform .08s}
+.btn:active{transform:translateY(2px);box-shadow:0 1px 0 #0E7A35}
+.btn .cnt{font-family:'Noto Sans KR';font-size:15px;opacity:.85;margin-left:6px}
+.btn.ghost{background:#fff;color:var(--muted);box-shadow:0 0 0 2px var(--line) inset}
+.btn.gas{background:var(--gas);box-shadow:0 3px 0 #C85A12}
+.btn.sky{background:var(--sky);box-shadow:0 3px 0 #2E86BA}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #2563EB;outline-offset:3px}
+
+/* ===== 표 ===== */
+table.tb{width:100%;border-collapse:separate;border-spacing:0;font-size:18px;overflow:hidden;border-radius:14px;border:2px solid var(--line)}
+.tb th,.tb td{padding:10px 12px;text-align:center;border-top:1px solid var(--line)}
+.tb thead th{background:#EEF3FB;border-top:none;font-family:'Jua';font-weight:400;font-size:20px}
+.tb th.down{background:var(--sky-soft);color:#1F6FA0}
+.tb th.up{background:var(--gas-soft);color:#C85A12}
+.scroll-x{overflow-x:auto}
+
+/* ===== 시뮬레이션 ===== */
+.sim{background:#fff;border-radius:var(--r);border:2px solid #BFE0F5;padding:20px}
+.sim canvas{width:100%;height:300px;display:block;border-radius:14px;background:#FAFCFF}
+.sim-ctrl{display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;margin-top:14px}
+.sim-ctrl input[type=range]{width:100%;accent-color:var(--gas);height:28px}
+.meters{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:14px}
+.meter{border-radius:14px;padding:10px 14px;background:#F4F7FC;text-align:center}
+.meter .k{font-size:15px;color:var(--muted)}
+.meter .v{font-family:'Jua';font-size:34px;line-height:1.2}
+.meter.p .v{color:#C85A12}
+.meter.c .v{color:#1F6FA0}
+.bar{height:12px;border-radius:999px;background:#E8EDF6;overflow:hidden;margin-top:6px}
+.bar i{display:block;height:100%;background:var(--gas);border-radius:999px;transition:width .3s}
+
+/* ===== O/X ===== */
+.ox{display:flex;align-items:center;gap:14px;padding:12px 0;border-top:1px dashed var(--line)}
+.ox:first-of-type{border-top:none}
+.ox .s{flex:1}
+.ox .bl{min-width:2.4em;font-family:'Jua';font-size:26px}
+
+.reveal{opacity:0;transform:translateY(16px);transition:opacity .5s,transform .5s}
+.reveal.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.reveal{opacity:1;transform:none;transition:none}html{scroll-behavior:auto}}
+
+footer{text-align:center;color:var(--muted);font-size:15px;padding:30px 0 calc(30px + env(safe-area-inset-bottom,0px))}
+
+@media (max-width:860px){
+  body{font-size:17px}
+  .hero .in,.grid2,.grid2.wide-left{grid-template-columns:1fr}
+  #heroBox{max-width:240px}
+  .grid3{grid-template-columns:1fr 1fr}
+  .meters{grid-template-columns:1fr}
+  .sim-ctrl{grid-template-columns:1fr}
+  .sim canvas{height:240px}
+  .sec-head h2{font-size:28px}
+  .card{padding:20px 18px}
+}
+.heroimg{width:100%;max-width:440px;justify-self:center;border-radius:28px;box-shadow:0 0 0 6px #fff,0 12px 30px rgba(200,90,18,.18)}
+.sim canvas.tall{height:460px}
+.temp-btns{display:flex;gap:8px;flex-wrap:wrap}
+.solve{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+.solve .side{background:#fff;border:2px solid var(--line)}
+@media (max-width:860px){.solve{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<nav><div class="in">
+  <span class="brand">Ⅵ-2 생활 속 기체</span>
+  <a href="#intro">들어가기</a>
+  <a href="#life">생활 속 현상</a>
+  <a href="#balloon">열기구</a>
+  <a href="#solve">문제 해결</a>
+  <a href="#wrap">확인·정리</a>
+  <a href="#career">진로와 직업</a>
+</div></nav>
+
+<header class="hero">
+  <div class="in">
+    <div>
+      <span class="unit">Ⅵ. 기체의 성질 · 2. 기체의 온도와 부피 관계</span>
+      <h1>생활 속 기체의<br>온도와 부피 관계</h1>
+      <p>찌그러진 축구공, 떠오르는 열기구, 안 열리는 밀폐 용기 속에도 샤를 법칙이 있다.</p>
+      <div class="pages"><span>교과서 214~216쪽</span><span>② 생활 속 기체의 온도와 부피 관계</span><span>진로와 직업</span></div>
+    </div>
+    <img class="heroimg" src="images/hot_air_balloons.webp" alt="부풀어 오르는 열기구">
+  </div>
+</header>
+
+<main>
+
+<!-- ================= 들어가기 ================= -->
+<section id="intro">
+  <div class="sec-head"><div class="num">1</div><h2>들어가기<small>교과서 214쪽</small></h2></div>
+
+  <div class="card check reveal" data-reveal>
+    <h3><span class="tag sun">이전 단원 확인하기</span>부피가 늘어나는 것은?</h3>
+    <p>(가)와 (나) 중 고무풍선을 씌운 삼각 플라스크를 넣었을 때 플라스크 속 기체의 부피가 늘어나는 것을 골라 보자.</p>
+    <div class="grid2">
+      <svg viewBox="0 0 520 250" width="100%" role="img" aria-label="(가) 80도 물과 (나) 얼음물에 고무풍선을 씌운 삼각 플라스크를 넣는 그림">
+        <g font-family="Jua, sans-serif" font-size="22" fill="#27324A" text-anchor="middle">
+          <text x="130" y="26">(가)</text><text x="390" y="26">(나)</text>
+          <text x="130" y="244" font-size="18">80 ℃ 물</text><text x="390" y="244" font-size="18">얼음물</text>
+        </g>
+        <g>
+          <rect x="40" y="110" width="180" height="110" rx="8" fill="#FFE2CF" stroke="#9AA7BF" stroke-width="3"/>
+          <path d="M60 104 q-8 -14 0 -26 q8 -12 0 -24 M200 104 q-8 -14 0 -26 q8 -12 0 -24" fill="none" stroke="#FFB27A" stroke-width="3" stroke-linecap="round"/>
+          <path d="M120 70 L120 110 L90 200 L170 200 L140 110 L140 70 Z" fill="rgba(255,255,255,.8)" stroke="#5D6B86" stroke-width="3" stroke-linejoin="round"/>
+          <path d="M118 72 q12 -14 24 0 Z" fill="#F7A8B8" stroke="#D9667E" stroke-width="2"/>
+        </g>
+        <g>
+          <rect x="300" y="110" width="180" height="110" rx="8" fill="#D6ECFB" stroke="#9AA7BF" stroke-width="3"/>
+          <rect x="318" y="126" width="24" height="20" rx="4" fill="#fff" stroke="#9CCDF0" stroke-width="2"/>
+          <rect x="440" y="150" width="22" height="20" rx="4" fill="#fff" stroke="#9CCDF0" stroke-width="2"/>
+          <path d="M380 70 L380 110 L350 200 L430 200 L400 110 L400 70 Z" fill="rgba(255,255,255,.8)" stroke="#5D6B86" stroke-width="3" stroke-linejoin="round"/>
+          <path d="M378 72 q12 -14 24 0 Z" fill="#F7A8B8" stroke="#D9667E" stroke-width="2"/>
+        </g>
+      </svg>
+      <div>
+        <p class="big-q" style="margin:0">정답: <span class="bl">(가)</span></p>
+        <div class="ans"><p>80 ℃ 물에 넣으면 플라스크 속 기체의 온도가 높아져 부피가 늘어나므로 고무풍선이 부풀어 오른다. 얼음물에 넣으면 기체의 부피가 줄어든다.</p></div>
+      </div>
+    </div>
+    <div class="rv-bar"><button class="btn rv-btn">정답 확인</button></div>
+  </div>
+
+  <div class="card reveal">
+    <h3><span class="tag mint">이 단원을 배우면</span></h3>
+    <div class="side" style="font-size:19px">· 기체의 온도와 부피 관계가 관련된 예를 설명할 수 있다.<br>· 온도에 따른 기체의 부피 변화를 이용하여 생활 속 문제를 해결할 수 있다.</div>
+  </div>
+
+  <div class="card think reveal" data-reveal>
+    <h3><span class="tag">생각 깨우기</span>축구공이 왜 찌그러졌지?</h3>
+    <div class="grid2">
+      <img src="images/soccer_winter.webp" alt="추운 겨울 운동장에 찌그러진 축구공">
+      <p class="big-q">겨울철 축구공을 바깥에 오래 두면 찌그러지는 까닭은 무엇일까?</p>
+    </div>
+    <div class="ans"><p>축구공 속 기체의 온도가 낮아지면 기체 입자의 운동이 느려져 기체의 부피가 줄어들기 때문이다.</p></div>
+    <div class="rv-bar"><button class="btn rv-btn">정답 확인</button></div>
+  </div>
+</section>
+
+<!-- ================= 생활 속 현상 ================= -->
+<section id="life">
+  <div class="sec-head"><div class="num">2</div><h2>기체의 온도와 부피 관계를 확인할 수 있는 현상<small>교과서 214쪽</small></h2></div>
+
+  <div class="card concept reveal" data-reveal>
+    <h3>축구공과 열기구</h3>
+    <p>추운 겨울날 운동장에 축구공을 오래 놓아두면 공이 찌그러진다. 이것은 축구공 속 기체의 온도가 <span class="bl">낮아지면</span> 기체 입자의 운동이 <span class="bl">느려져</span> 기체의 부피가 <span class="bl">줄어들기</span> 때문이다.</p>
+    <p>열기구를 띄울 때에도 기체의 온도와 부피 관계를 이용한다. 열기구의 풍선 속 기체를 가열하면 기체의 온도가 높아지면서 풍선이 크게 부풀어 오른다. 이때 풍선 속 기체의 일부가 풍선 밖으로 밀려 나가면서 열기구가 <span class="bl">가벼워져</span> 위로 떠오른다.</p>
+    <div class="grid2" style="margin-top:8px">
+      <img src="images/hot_air_balloons.webp" alt="그림 Ⅵ-8 열기구의 원리" style="border-radius:14px">
+      <div class="side" style="font-size:18px">
+        <b>그림 Ⅵ-8 열기구의 원리</b><br>
+        ① 열기구의 풍선 속 기체를 가열한다.<br>
+        ② 풍선 속 기체의 온도가 높아지면서 기체의 부피가 <span class="bl">늘어나</span> 풍선이 부풀어 오른다.
+      </div>
+    </div>
+    <div class="rv-bar"><button class="btn rv-btn">정답 확인</button></div>
+  </div>
+
+  <div class="card concept reveal" data-reveal>
+    <h3>여름철 햇빛 아래 과자 봉지</h3>
+    <p>여름철에 햇빛이 비치는 곳에 놓아둔 과자 봉지가 부풀어 오른다.</p>
+    <p>→ 과자 봉지 속 기체의 온도가 <span class="bl">높아지면</span> 기체의 부피가 <span class="bl">늘어나</span> 과자 봉지가 부풀어 오른다.</p>
+    <div class="side" style="margin-top:8px"><b>비교</b> 높은 산에서 과자 봉지가 부푸는 것은 <b>압력</b>이 작아졌기 때문(보일 법칙)이고, 햇빛 아래에서 부푸는 것은 <b>온도</b>가 높아졌기 때문(샤를 법칙)이다.</div>
+    <div class="rv-bar"><button class="btn rv-btn">정답 확인</button></div>
+  </div>
+</section>
+
+<!-- ================= 열기구 시뮬레이션 ================= -->
+<section id="balloon">
+  <div class="sec-head"><div class="num">3</div><h2>열기구 띄워 보기<small>온도가 높아지면 부피가 늘어나 기체가 밀려 나간다</small></h2></div>
+
+  <div class="sim reveal">
+    <h3 class="jua" style="font-size:25px;margin:0 0 10px">버너를 켜서 풍선 속 기체를 가열해 보자</h3>
+    <canvas id="hab" class="tall" aria-label="버너로 가열하면 입자가 빨라지고 일부가 밖으로 나가 열기구가 떠오르는 시뮬레이션"></canvas>
+    <div class="sim-ctrl">
+      <p class="note" style="margin:0">버너를 켜면 풍선 속 기체의 온도가 올라가고, 끄면 천천히 식는다. 풍선 아래쪽 입구로 밀려 나가는 입자를 관찰해 보자.</p>
+      <div class="temp-btns"><button class="btn gas" id="burner">버너 켜기</button><button class="btn ghost" id="reset">처음으로</button></div>
+    </div>
+    <div class="meters">
+      <div class="meter"><div class="k">풍선 속 기체의 온도</div><div class="v" id="hT">20 ℃</div><div class="bar"><i id="hTb"></i></div></div>
+      <div class="meter c"><div class="k">풍선 속 기체 입자 수</div><div class="v" id="hN">40개</div><div class="bar"><i id="hNb" style="background:var(--sky)"></i></div></div>
+      <div class="meter p"><div class="k">열기구</div><div class="v" id="hS" style="font-size:28px">땅 위</div></div>
+    </div>
+  </div>
+
+  <div class="card think reveal" data-reveal>
+    <h3><span class="tag">생각해 보기</span>시뮬레이션 관찰 정리</h3>
+    <ul class="qlist">
+      <li><span class="qn">1</span>버너로 가열하면 풍선 속 기체 입자의 운동은 어떻게 변하는가?
+        <div class="ans"><p>입자 운동이 빨라지고 풍선 벽에 더 강하게 충돌한다.</p></div></li>
+      <li><span class="qn">2</span>열기구가 위로 떠오르는 까닭은 무엇인가?
+        <div class="ans"><p>풍선 속 기체의 온도가 높아져 부피가 늘어나면서 기체의 일부가 풍선 밖으로 밀려 나가므로 열기구가 가벼워지기 때문이다.</p></div></li>
+      <li><span class="qn">3</span>버너를 끄면 열기구는 어떻게 될까?
+        <div class="ans"><p>풍선 속 기체의 온도가 낮아져 부피가 줄어들고, 바깥 공기가 다시 들어와 열기구가 무거워지므로 아래로 내려온다.</p></div></li>
+    </ul>
+    <div class="rv-bar"><button class="btn rv-btn">정답 확인</button></div>
+  </div>
+</section>
+
+<!-- ================= 문제 해결 ================= -->
+<section id="solve">
+  <div class="sec-head"><div class="num">4</div><h2>기체의 온도와 부피 관계를 이용하여 생활 속 문제 해결하기<small>교과서 215쪽 · 해 보기</small></h2></div>
+
+  <div class="card lab reveal" data-reveal>
+    <h3><span class="tag mint">해 보기</span>어떻게 해결할까?</h3>
+    <p>기체의 온도와 부피 관계를 이용하여 다음 두 가지 상황의 문제를 해결하는 방법을 써 보자.</p>
+    <div class="solve">
+      <div class="side">
+        <h3 style="font-size:23px">① 탁구공이 찌그러졌어.</h3>
+        <img src="images/pingpong_dented.webp" alt="찌그러진 탁구공" class="photo">
+        <div class="grid2" style="margin-top:10px;grid-template-columns:auto 1fr;gap:12px">
+          <svg viewBox="0 0 160 160" width="140" role="img" aria-label="탁구공 모양 변화">
+            <rect x="0" y="100" width="160" height="60" rx="8" id="ppWater" fill="#EEF3FB"/>
+            <path id="ppBall" d="M80 30 C113 30 130 52 130 80 C130 108 108 130 80 130 C52 130 30 108 30 80 C30 62 40 48 52 40 C62 52 68 54 80 30 Z" fill="#FFA43A" stroke="#C86A12" stroke-width="3"/>
+          </svg>
+          <div>
+            <button class="btn gas" id="ppBtn">뜨거운 물 위에 올리기</button>
+            <p class="note" style="margin:6px 0 0">버튼을 눌러 확인해 보자.</p>
+          </div>
+        </div>
+        <p style="margin:10px 0 0;font-weight:700">해결 방법</p>
+        <div class="ans"><p>탁구공을 뜨거운 물 위에 올려놓는다.</p></div>
+      </div>
+      <div class="side">
+        <h3 style="font-size:23px">② 냉장고에서 꺼낸 밀폐 용기의 뚜껑이 열리지 않아.</h3>
+        <img src="images/food_container.webp" alt="뚜껑이 열리지 않는 밀폐 용기">
+        <p style="margin:10px 0 0;font-weight:700">해결 방법</p>
+        <div class="ans"><p>밀폐 용기를 뜨거운 물에 담근다.</p></div>
+      </div>
+    </div>
+
+    <ul class="qlist" style="margin-top:14px">
+      <li><span class="qn">1</span>자신이 생각한 방법을 친구와 비교해 보고, 해결 방법의 원리를 설명해 보자.
+        <div class="ans"><p><b>찌그러진 탁구공</b> | 뜨거운 물 위에 찌그러진 탁구공을 올려놓으면 탁구공 속 기체의 온도가 높아지면서 기체의 부피가 늘어나므로 탁구공이 펴진다.</p></div>
+        <div class="ans"><p><b>뚜껑이 열리지 않는 밀폐 용기</b> | 뜨거운 물에 밀폐 용기를 담그면 용기 속 기체의 온도가 높아지면서 기체의 부피가 늘어나므로 용기의 뚜껑이 잘 열린다.</p></div></li>
+      <li><span class="qn">2</span>위에 제시한 상황 외에 다른 예를 찾아 그 방법과 원리를 이야기해 보자.
+        <div class="ans"><p><b>포개져 빠지지 않는 두 개의 그릇</b> | 아래쪽 그릇의 아랫부분을 뜨거운 물에 담그면 두 그릇 사이에 있는 기체의 부피가 늘어나 위쪽 그릇을 밀어내므로 그릇이 쉽게 빠진다.</p></div>
+        <div class="ans"><p><b>자동차의 타이어</b> | 기온이 낮은 겨울철에는 타이어 속 공기의 부피가 줄어들기 때문에 타이어 속 공기의 적정 압력을 유지하기 위해 공기를 더 넣어 준다.</p></div></li>
+    </ul>
+    <div class="rv-bar"><button class="btn rv-btn">정답 확인</button></div>
+  </div>
+</section>
+
+<!-- ================= 확인·정리 ================= -->
+<section id="wrap">
+  <div class="sec-head"><div class="num">5</div><h2>확인하고 정리하기<small>교과서 215쪽</small></h2></div>
+
+  <div class="card check reveal" data-reveal>
+    <h3><span class="tag sun">스스로 확인하기</span></h3>
+    <ul class="qlist">
+      <li><span class="qn">1</span>열기구의 풍선 속 기체의 온도가 높아지면 기체 입자의 운동이 ( 빨라져, 느려져 ) 기체의 부피가 늘어난다. → <span class="bl">빨라져</span></li>
+      <li><span class="qn">2</span><b style="color:#9A7400">문제 해결 능력</b> | 냉장고에서 꺼낸 달걀을 바로 끓는 물에 넣으면 달걀 껍데기가 쉽게 터진다. 이것은 달걀 껍데기 안쪽에 들어 있는 공기와 관련 있다. 달걀 껍데기가 터지지 않게 달걀을 삶는 방법을 온도에 따른 공기의 부피 변화와 관련지어 설명해 보자.
+        <div class="ans"><p>냉장고에서 꺼낸 달걀을 끓는 물에 바로 넣으면 달걀 껍데기 안쪽에 들어 있는 공기의 부피가 갑자기 늘어나면서 껍데기가 터지기 쉽다. 따라서 달걀을 냉장고에서 미리 꺼내 두었다가 찬물에 넣어 약한 불로 서서히 가열하면 달걀 껍데기가 터지는 것을 막을 수 있다.</p></div></li>
+    </ul>
+    <div class="rv-bar"><button class="btn rv-btn">정답 확인</button></div>
+  </div>
+
+  <div class="card check reveal" data-reveal>
+    <h3><span class="tag sun">O / X 확인</span>문장이 옳으면 O, 옳지 않으면 X</h3>
+    <div class="ox"><span class="s">① 여름철 자전거를 타고 달리면 타이어 속 기체의 온도가 높아져 기체의 부피가 늘어나 타이어가 팽팽해진다.</span><span class="bl">O</span></div>
+    <div class="ox"><span class="s">② 겨울철 축구공이 찌그러지는 것은 축구공 속 기체 입자의 개수가 줄어들었기 때문이다.</span><span class="bl">X</span></div>
+    <div class="ox"><span class="s">③ 고무공 위에 앉으면 고무공이 찌그러지는 것은 샤를 법칙과 관련된 현상이다.</span><span class="bl">X</span></div>
+    <div class="ox"><span class="s">④ 뚜껑이 열리지 않는 밀폐 용기를 뜨거운 물에 담그면 용기 속 기체의 부피가 늘어난다.</span><span class="bl">O</span></div>
+    <p class="note" style="margin:8px 0 0">③은 압력에 따른 부피 변화이므로 보일 법칙과 관련된 현상이다.</p>
+    <div class="rv-bar"><button class="btn rv-btn">정답 확인</button></div>
+  </div>
+
+  <div class="card check reveal" data-reveal>
+    <h3><span class="tag sun">구분하기</span>보일 법칙일까, 샤를 법칙일까?</h3>
+    <div class="scroll-x"><table class="tb">
+      <thead><tr><th>현상</th><th>관련 법칙</th></tr></thead>
+      <tbody>
+        <tr><td class="l">높은 산 위에서 과자 봉지가 부풀어 오른다.</td><td><span class="bl">보일 법칙</span></td></tr>
+        <tr><td class="l">햇빛 아래 둔 과자 봉지가 부풀어 오른다.</td><td><span class="bl">샤를 법칙</span></td></tr>
+        <tr><td class="l">잠수부가 내뿜은 공기 방울이 위로 올라갈수록 커진다.</td><td><span class="bl">보일 법칙</span></td></tr>
+        <tr><td class="l">열기구의 풍선 속 기체를 가열하면 풍선이 부풀어 오른다.</td><td><span class="bl">샤를 법칙</span></td></tr>
+        <tr><td class="l">공기 침대에 누우면 공기 침대가 찌그러진다.</td><td><span class="bl">보일 법칙</span></td></tr>
+        <tr><td class="l">찌그러진 탁구공을 뜨거운 물에 넣으면 펴진다.</td><td><span class="bl">샤를 법칙</span></td></tr>
+      </tbody>
+    </table></div>
+    <p class="note" style="margin:8px 0 0">압력이 변해서 부피가 변하면 보일 법칙, 온도가 변해서 부피가 변하면 샤를 법칙!</p>
+    <div class="rv-bar"><button class="btn rv-btn">정답 확인</button></div>
+  </div>
+
+  <div class="card concept reveal" data-reveal>
+    <h3>배운 내용 정리하기 · 샤를 법칙 관련 예</h3>
+    <div class="scroll-x"><table class="tb">
+      <thead><tr><th class="up">기체의 온도가 높아지면</th><th class="down">기체의 온도가 낮아지면</th></tr></thead>
+      <tbody>
+        <tr><td>기체의 부피가 <span class="bl">늘어난다</span></td><td>기체의 부피가 <span class="bl">줄어든다</span></td></tr>
+        <tr><td>여름철 자전거 타이어가 팽팽해진다<br>열기구의 풍선이 부풀어 오른다<br>찌그러진 탁구공이 펴진다<br>밀폐 용기의 뚜껑이 잘 열린다</td><td>겨울철 축구공이 찌그러진다<br>겨울철 타이어에 공기를 더 넣어 준다<br>추운 바깥에서 은박 풍선이 쭈그러든다</td></tr>
+      </tbody>
+    </table></div>
+    <div class="rv-bar"><button class="btn rv-btn">정답 확인</button></div>
+  </div>
+
+  <div class="card reveal" style="background:var(--gas-soft);border-color:#FFC9A3">
+    <h3 style="margin:0">다음 시간에는</h3>
+    <p style="margin:6px 0 0">‘2. 기체의 온도와 부피 관계’ 중단원을 정리해 보자. (교과서 216~217쪽)</p>
+  </div>
+</section>
+
+<!-- ================= 진로와 직업 ================= -->
+<section id="career">
+  <div class="sec-head"><div class="num">6</div><h2>진로와 직업<small>교과서 216쪽 · 친환경 자동차를 개발하는 자동차 공학 기술자</small></h2></div>
+
+  <div class="card reveal">
+    <div class="grid2 wide-left" style="align-items:start">
+      <div>
+        <p>세계적으로 환경 문제에 대한 관심이 커지면서 자동차 산업은 친환경 자동차를 중심으로 발전하고 있다. 자동차 공학 기술자는 수소 연료 전지 차, 전기 차, 하이브리드 차 등을 연구하고 개발하는 일을 한다.</p>
+        <p>그중 수소 연료 전지 차는 수소와 산소가 반응할 때 발생하는 전기 에너지로 자동차를 움직인다. 수소 기체는 액체로 만들기 매우 어려우므로 많은 양의 수소 기체를 저장하기 위해서는 <b>높은 압력을 견딜 수 있는 탱크</b>가 필요하다.</p>
+        <div class="side"><b>디지털 탐색</b> 커리어넷(www.career.go.kr)에서 자동차 공학 기술자에 관련된 정보를 확인할 수 있다.</div>
+      </div>
+      <img src="images/job_guidebook.webp" alt="자동차 공학 기술자 직업 가이드북" style="max-width:300px;justify-self:center">
+    </div>
+    <div class="side" style="margin-top:14px;background:var(--mint-soft)"><b style="color:#1E8571">가치 태도 활동</b> 자동차 공학 기술자가 되기 위해 필요한 준비 과정을 조사하여 직업 가이드북을 만들어 보자.</div>
+  </div>
+</section>
+
+</main>
+<footer>미래엔 중학교 과학 1 · Ⅵ. 기체의 성질 · 2. 기체의 온도와 부피 관계 · 2. 생활 속 기체의 온도와 부피 관계 (214~216쪽)</footer>
+
+<script>
+
+/* ---------- 정답 확인: 버튼 한 번에 빈칸 하나씩 ---------- */
+document.querySelectorAll('[data-reveal]').forEach(box=>{
+  const items=[...box.querySelectorAll('.bl, .ans')];
+  const btn=box.querySelector('.rv-btn');
+  if(!btn||!items.length) return;
+  const shown=()=>items.filter(x=>x.classList.contains('on')).length;
+  const upd=()=>{
+    const n=shown();
+    if(n<items.length){btn.innerHTML='정답 확인<span class="cnt">'+n+' / '+items.length+'</span>';btn.classList.remove('ghost');}
+    else{btn.textContent='다시 가리기';btn.classList.add('ghost');}
+  };
+  btn.addEventListener('click',()=>{
+    const next=items.find(x=>!x.classList.contains('on'));
+    if(next)next.classList.add('on');
+    else items.forEach(x=>x.classList.remove('on'));
+    upd();
+  });
+  items.forEach(el=>el.addEventListener('click',()=>{el.classList.add('on');upd();}));
+  upd();
+});
+
+
+/* ---------- 스크롤 페이드 & 내비 강조 ---------- */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+const links=[...document.querySelectorAll('nav a')];
+const secIo=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){links.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id));}}),{rootMargin:'-45% 0px -50% 0px'});
+document.querySelectorAll('main section').forEach(s=>secIo.observe(s));
+
+/* ---------- 탁구공 ---------- */
+(function(){
+  const ball=document.getElementById('ppBall'),btn=document.getElementById('ppBtn'),water=document.getElementById('ppWater');
+  const dent='M80 30 C113 30 130 52 130 80 C130 108 108 130 80 130 C52 130 30 108 30 80 C30 62 40 48 52 40 C62 52 68 54 80 30 Z';
+  const round='M80 30 C113 30 130 52 130 80 C130 108 108 130 80 130 C52 130 30 108 30 80 C30 62 38 46 50 38 C60 31 70 30 80 30 Z';
+  let on=false;
+  btn.onclick=()=>{on=!on;ball.setAttribute('d',on?round:dent);water.setAttribute('fill',on?'#FFD9C2':'#EEF3FB');btn.textContent=on?'다시 찌그러뜨리기':'뜨거운 물 위에 올리기';};
+  ball.style.transition='d .8s';
+})();
+
+/* ---------- 열기구 시뮬레이션 ---------- */
+(function(){
+  const c=document.getElementById('hab'),ctx=c.getContext('2d');
+  const hT=document.getElementById('hT'),hTb=document.getElementById('hTb'),hN=document.getElementById('hN'),hNb=document.getElementById('hNb'),hS=document.getElementById('hS');
+  const burnBtn=document.getElementById('burner'),resetBtn=document.getElementById('reset');
+  let W,H,dpr;const N0=40;let pr=7;
+  function size(){const r=c.getBoundingClientRect();dpr=devicePixelRatio||1;W=r.width;H=r.height;c.width=W*dpr;c.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);pr=Math.max(5,Math.min(7,W/120));}
+  size();addEventListener('resize',size);
+  let T=20,burner=false,lift=0,ps=[],out=[];
+  const RB=()=>Math.min(100,H*.21); // 풍선 반지름
+  const ground=()=>H-30;
+  const y0=()=>ground()-RB()-84;
+  const maxLift=()=>Math.max(0,y0()-RB()-12);
+  function center(){return{x:W/2,y:y0()-lift};}
+  function spawn(){ps=[];const rb=RB();for(let i=0;i<N0;i++){const a=Math.random()*6.283,r=Math.sqrt(Math.random())*(rb-pr-4),b=Math.random()*6.283;ps.push({rx:Math.cos(a)*r,ry:Math.sin(a)*r,ax:Math.cos(b),ay:Math.sin(b),f:0});}out=[];}
+  spawn();
+  burnBtn.onclick=()=>{burner=!burner;burnBtn.textContent=burner?'버너 끄기':'버너 켜기';};
+  resetBtn.onclick=()=>{burner=false;burnBtn.textContent='버너 켜기';T=20;lift=0;spawn();};
+  const speed=t=>110*Math.sqrt((t+273)/293);
+  let last=performance.now();
+  function step(now){
+    const dt=Math.min(.033,(now-last)/1000);last=now;
+    T+= burner? Math.min(14*dt,120-T) : Math.max(-6*dt,20-T);
+    const rb=RB(),sp=speed(T),neck=rb*.32;
+    const targetN=Math.round(N0*293/(T+273));
+    for(let i=ps.length-1;i>=0;i--){
+      const p=ps[i];p.rx+=p.ax*sp*dt;p.ry+=p.ay*sp*dt;
+      const d=Math.hypot(p.rx,p.ry);
+      if(d>rb-pr-3){
+        // 아래쪽 입구로 나가기 (온도가 높아 부피가 늘어날 때)
+        if(p.ry>0&&Math.abs(p.rx)<neck&&ps.length>targetN){out.push({x:p.rx,y:p.ry,vy:60,a:1});ps.splice(i,1);continue;}
+        const nx=p.rx/d,ny=p.ry/d,dot=p.ax*nx+p.ay*ny;if(dot>0){p.ax-=2*dot*nx;p.ay-=2*dot*ny;p.f=1;}
+        p.rx=nx*(rb-pr-3);p.ry=ny*(rb-pr-3);
+      }
+      if(p.f>0)p.f-=dt*3;
+    }
+    // 식으면 바깥 공기가 다시 들어옴
+    if(ps.length<targetN&&Math.random()<dt*3){const b=-Math.PI/2+(Math.random()-.5);ps.push({rx:(Math.random()-.5)*neck,ry:rb-pr-6,ax:Math.cos(b),ay:Math.sin(b),f:0});}
+    // 떠오르기: 빠져나간 입자 수에 따라
+    const escaped=N0-ps.length,targetLift=Math.max(0,(escaped-3))/7*maxLift();
+    lift+=(Math.min(targetLift,maxLift())-lift)*Math.min(1,dt*1.5);
+    // ----- 그리기 -----
+    ctx.clearRect(0,0,W,H);
+    const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#CFEAFB');g.addColorStop(1,'#F2FAFF');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='#BFE3A6';ctx.fillRect(0,ground(),W,H-ground());
+    const C=center();
+    // 밧줄 & 바구니
+    const by=C.y+rb+50;
+    ctx.strokeStyle='#8A6A44';ctx.lineWidth=2;ctx.beginPath();ctx.moveTo(C.x-neck,C.y+rb*.95);ctx.lineTo(C.x-22,by);ctx.moveTo(C.x+neck,C.y+rb*.95);ctx.lineTo(C.x+22,by);ctx.stroke();
+    ctx.fillStyle='#B07A3E';ctx.fillRect(C.x-26,by,52,30);ctx.strokeStyle='#7A5228';ctx.strokeRect(C.x-26,by,52,30);
+    // 버너 불꽃
+    if(burner){const fh=26+Math.random()*10;ctx.fillStyle='rgba(255,138,61,.9)';ctx.beginPath();ctx.moveTo(C.x-9,by);ctx.quadraticCurveTo(C.x,by-fh*1.4,C.x+9,by);ctx.fill();ctx.fillStyle='rgba(255,216,77,.95)';ctx.beginPath();ctx.moveTo(C.x-5,by);ctx.quadraticCurveTo(C.x,by-fh,C.x+5,by);ctx.fill();}
+    // 풍선
+    const warm=(T-20)/100;
+    ctx.fillStyle=`rgba(255,${Math.round(236-80*warm)},${Math.round(214-150*warm)},.55)`;
+    ctx.strokeStyle='#E06A3B';ctx.lineWidth=4;
+    const a0=Math.asin(neck/rb);
+    ctx.beginPath();ctx.arc(C.x,C.y,rb,Math.PI/2+a0,Math.PI/2-a0+2*Math.PI);ctx.fill();ctx.stroke();
+    // 입자
+    for(const p of ps){
+      const x=C.x+p.rx,y=C.y+p.ry;
+      if(p.f>0){ctx.strokeStyle=`rgba(255,138,61,${p.f})`;ctx.lineWidth=1.5+2*warm;ctx.beginPath();ctx.arc(x,y,pr+3+(4+6*warm)*(1-p.f),0,6.283);ctx.stroke();}
+      ctx.fillStyle='#5AB4E8';ctx.beginPath();ctx.arc(x,y,pr,0,6.283);ctx.fill();
+    }
+    for(let i=out.length-1;i>=0;i--){const o=out[i];o.y+=o.vy*dt;o.a-=dt*.8;if(o.a<=0){out.splice(i,1);continue;}ctx.fillStyle=`rgba(90,180,232,${o.a})`;ctx.beginPath();ctx.arc(C.x+o.x,C.y+o.y,pr,0,6.283);ctx.fill();}
+    // 표시
+    hT.textContent=Math.round(T)+' ℃';hTb.style.width=((T-20)/100*85+15)+'%';
+    hN.textContent=ps.length+'개';hNb.style.width=(ps.length/N0*100)+'%';
+    hS.textContent=lift>maxLift()*.8?'높이 떠올랐다':lift>8?'떠오르는 중':'땅 위';
+    requestAnimationFrame(step);
+  }
+  requestAnimationFrame(step);
+})();
+</script>
+</body>
+</html>
